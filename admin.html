@@ -1,0 +1,2779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>لوحة الإدارة | Rebonz Cosmetics</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Supabase JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <style>
+
+        :root {
+
+            --cream: #FBF0EC;
+            --rose-deep: #B23A5C;
+            --rose-deep-2: #96304D;
+            --rose-soft: #F7D9E1;
+            --plum-ink: #2B1620;
+            --mauve: #7C5163;
+            --paper: #FFFDFC;
+
+            --shadow:
+                0 18px 40px -18px
+                rgba(43,22,32,0.35);
+
+            --font-display:
+                'Lalezar', sans-serif;
+
+            --font-body:
+                'Tajawal', sans-serif;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                var(--font-body);
+
+            background:
+                var(--cream);
+
+            color:
+                var(--plum-ink);
+
+            line-height: 1.6;
+        }
+
+
+        /* ==========================================
+           LOGIN
+        ========================================== */
+
+        #loginScreen {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background:
+                var(--paper);
+
+            padding: 40px;
+
+            border-radius: 28px;
+
+            box-shadow:
+                var(--shadow);
+
+            border:
+                1px solid
+                rgba(43,22,32,0.06);
+        }
+
+
+        .login-logo {
+
+            text-align: center;
+
+            font-family:
+                var(--font-display);
+
+            font-size: 2.5rem;
+
+            color:
+                var(--rose-deep);
+
+            margin-bottom: 5px;
+        }
+
+
+        .login-subtitle {
+
+            text-align: center;
+
+            color:
+                var(--mauve);
+
+            margin-bottom: 30px;
+        }
+
+
+        .login-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .login-group label {
+
+            font-weight: 700;
+
+            color:
+                var(--mauve);
+        }
+
+
+        .login-group input {
+
+            width: 100%;
+
+            padding: 14px 18px;
+
+            border:
+                1.5px solid
+                rgba(43,22,32,0.15);
+
+            border-radius: 14px;
+
+            font-family:
+                inherit;
+
+            font-size: 1rem;
+
+            background:
+                var(--cream);
+
+            color:
+                var(--plum-ink);
+        }
+
+
+        .login-group input:focus {
+
+            outline: none;
+
+            border-color:
+                var(--rose-deep);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(178,58,92,0.1);
+        }
+
+
+        .login-error {
+
+            display: none;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border:
+                1px solid
+                rgba(153,27,27,.2);
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-bottom: 15px;
+
+            font-weight: 700;
+        }
+
+
+        /* ==========================================
+           GENERAL
+        ========================================== */
+
+        .container {
+
+            max-width: 1100px;
+
+            margin: 40px auto;
+
+            padding: 0 24px;
+        }
+
+
+        .header-bar {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .header-bar h1 {
+
+            font-family:
+                var(--font-display);
+
+            font-size: 2.2rem;
+
+            margin: 0;
+
+            color:
+                var(--rose-deep);
+        }
+
+
+        .header-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .admin-email {
+
+            color:
+                var(--mauve);
+
+            font-size:
+                .9rem;
+
+            font-weight:
+                700;
+        }
+
+
+        .status {
+
+            padding: 14px 20px;
+
+            background:
+                var(--rose-soft);
+
+            color:
+                var(--rose-deep-2);
+
+            border-radius: 12px;
+
+            margin-bottom: 24px;
+
+            font-weight: 700;
+
+            font-size: .95rem;
+
+            border:
+                1px solid
+                rgba(178,58,92,0.15);
+        }
+
+
+        .status.error {
+
+            background:
+                #fee2e2;
+
+            color:
+                #991b1b;
+
+            border-color:
+                rgba(153,27,27,0.2);
+        }
+
+
+        .form-card {
+
+            background:
+                var(--paper);
+
+            padding: 32px;
+
+            border-radius: 24px;
+
+            margin-bottom: 40px;
+
+            box-shadow:
+                var(--shadow);
+
+            border:
+                1px solid
+                rgba(43,22,32,0.06);
+        }
+
+
+        .form-card h2 {
+
+            font-family:
+                var(--font-display);
+
+            font-size: 1.6rem;
+
+            margin:
+                0 0 24px;
+
+            color:
+                var(--plum-ink);
+        }
+
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .form-group.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        label {
+
+            font-weight: 700;
+
+            font-size: .95rem;
+
+            color:
+                var(--mauve);
+        }
+
+
+        input,
+        textarea {
+
+            width: 100%;
+
+            padding: 14px 18px;
+
+            border:
+                1.5px solid
+                rgba(43,22,32,0.15);
+
+            border-radius: 14px;
+
+            font-family:
+                inherit;
+
+            font-size: 1rem;
+
+            background:
+                var(--cream);
+
+            color:
+                var(--plum-ink);
+        }
+
+
+        input:focus,
+        textarea:focus {
+
+            outline: none;
+
+            border-color:
+                var(--rose-deep);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(178,58,92,0.1);
+
+            background:
+                var(--paper);
+        }
+
+
+        textarea {
+
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        .btn {
+
+            border: none;
+
+            padding: 14px 28px;
+
+            border-radius: 999px;
+
+            cursor: pointer;
+
+            font-family:
+                inherit;
+
+            font-size: 1rem;
+
+            font-weight: 700;
+
+            transition:
+                transform .2s,
+                box-shadow .2s,
+                background .2s;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+        }
+
+
+        .btn:active {
+
+            transform:
+                scale(.97);
+        }
+
+
+        .btn-primary {
+
+            background:
+                var(--rose-deep);
+
+            color:
+                var(--paper);
+
+            box-shadow:
+                0 8px 20px -6px
+                rgba(178,58,92,.4);
+        }
+
+
+        .btn-primary:hover {
+
+            background:
+                var(--rose-deep-2);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .btn-primary:disabled {
+
+            opacity: .6;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+        }
+
+
+        .btn-secondary {
+
+            background:
+                transparent;
+
+            color:
+                var(--plum-ink);
+
+            border:
+                1.5px solid
+                rgba(43,22,32,.2);
+        }
+
+
+        .btn-secondary:hover {
+
+            border-color:
+                var(--rose-deep);
+
+            color:
+                var(--rose-deep);
+
+            background:
+                var(--rose-soft);
+        }
+
+
+        .btn-danger {
+
+            background:
+                #fee2e2;
+
+            color:
+                #991b1b;
+
+            border:
+                1px solid
+                rgba(153,27,27,.2);
+
+            padding:
+                8px 16px;
+
+            font-size:
+                .9rem;
+
+            border-radius:
+                12px;
+        }
+
+
+        .btn-edit {
+
+            background:
+                var(--rose-soft);
+
+            color:
+                var(--rose-deep-2);
+
+            padding:
+                8px 16px;
+
+            font-size:
+                .9rem;
+
+            border-radius:
+                12px;
+        }
+
+
+        .actions {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 24px;
+        }
+
+
+        .preview-container {
+
+            margin-top: 12px;
+        }
+
+
+        .preview-container img {
+
+            width: 160px;
+
+            height: 160px;
+
+            object-fit: cover;
+
+            border-radius: 16px;
+
+            border:
+                3px solid
+                var(--paper);
+
+            box-shadow:
+                0 8px 20px -8px
+                rgba(0,0,0,.15);
+        }
+
+
+        .products-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .products-header h2 {
+
+            font-family:
+                var(--font-display);
+
+            font-size:
+                1.8rem;
+
+            margin: 0;
+        }
+
+
+        .products-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(240px,1fr)
+                );
+
+            gap: 24px;
+        }
+
+
+        .product-card {
+
+            background:
+                var(--paper);
+
+            border-radius:
+                20px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 10px 24px -12px
+                rgba(43,22,32,.2);
+
+            border:
+                1px solid
+                rgba(43,22,32,.06);
+
+            transition:
+                transform .25s ease;
+        }
+
+
+        .product-card:hover {
+
+            transform:
+                translateY(-4px);
+        }
+
+
+        .product-image-container {
+
+            width: 100%;
+
+            height: 200px;
+
+            background:
+                var(--cream);
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+        }
+
+
+        .product-image {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit:
+                cover;
+        }
+
+
+        .no-image {
+
+            width: 100%;
+
+            height: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color:
+                var(--mauve);
+        }
+
+
+        .product-content {
+
+            padding: 18px;
+        }
+
+
+        .product-name {
+
+            font-family:
+                var(--font-display);
+
+            font-size:
+                1.2rem;
+
+            margin-bottom:
+                6px;
+        }
+
+
+        .product-category {
+
+            display:
+                inline-block;
+
+            background:
+                var(--rose-soft);
+
+            color:
+                var(--rose-deep-2);
+
+            padding:
+                4px 10px;
+
+            border-radius:
+                999px;
+
+            font-size:
+                .8rem;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                10px;
+        }
+
+
+        .product-description {
+
+            color:
+                var(--mauve);
+
+            font-size:
+                .9rem;
+
+            min-height:
+                40px;
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .product-price {
+
+            font-size:
+                1.1rem;
+
+            font-weight:
+                800;
+
+            color:
+                var(--rose-deep);
+
+            margin-bottom:
+                4px;
+        }
+
+
+        .product-stock {
+
+            font-size:
+                .85rem;
+
+            color:
+                var(--mauve);
+
+            margin-bottom:
+                16px;
+        }
+
+
+        .card-actions {
+
+            display:
+                flex;
+
+            gap:
+                8px;
+        }
+
+
+        .card-actions .btn {
+
+            flex:
+                1;
+
+            padding:
+                10px;
+
+            font-size:
+                .9rem;
+        }
+
+
+        .loading {
+
+            text-align:
+                center;
+
+            padding:
+                40px;
+
+            color:
+                var(--mauve);
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        .empty {
+
+            text-align:
+                center;
+
+            padding:
+                60px 20px;
+
+            color:
+                var(--mauve);
+
+            background:
+                var(--paper);
+
+            border-radius:
+                20px;
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        @media(max-width:768px) {
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .products-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .header-bar {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+                gap:
+                    12px;
+            }
+
+
+            .header-actions {
+
+                width:
+                    100%;
+
+                justify-content:
+                    space-between;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOGIN SCREEN
+===================================================== -->
+
+<div id="loginScreen">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            Rebonz
+        </div>
+
+        <div class="login-subtitle">
+            تسجيل دخول لوحة الإدارة
+        </div>
+
+
+        <div
+            id="loginError"
+            class="login-error"
+        ></div>
+
+
+        <form id="loginForm">
+
+            <div class="login-group">
+
+                <label for="loginEmail">
+                    البريد الإلكتروني
+                </label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    required
+                    autocomplete="username"
+                    placeholder="admin@example.com"
+                >
+
+            </div>
+
+
+            <div class="login-group">
+
+                <label for="loginPassword">
+                    كلمة المرور
+                </label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    required
+                    autocomplete="current-password"
+                    placeholder="كلمة المرور"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                id="loginButton"
+                style="width:100%;"
+            >
+                تسجيل الدخول
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN PANEL
+===================================================== -->
+
+<div
+    id="adminPanel"
+    style="display:none;"
+>
+
+    <div class="container">
+
+
+        <!-- Header -->
+
+        <div class="header-bar">
+
+            <h1>
+                ⚙️ إدارة منتجات Rebonz
+            </h1>
+
+
+            <div class="header-actions">
+
+                <span
+                    class="admin-email"
+                    id="adminEmail"
+                ></span>
+
+
+                <button
+                    class="btn btn-secondary"
+                    id="logoutButton"
+                >
+                    تسجيل الخروج
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <div
+            class="status"
+            id="status"
+        >
+            جاري الاتصال بـ Supabase...
+        </div>
+
+
+        <!-- Product Form -->
+
+        <div class="form-card">
+
+            <h2 id="formTitle">
+                إضافة منتج جديد
+            </h2>
+
+
+            <form id="productForm">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            اسم المنتج *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            required
+                            placeholder="مثال: زيت شفاه Aura Petal"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="category">
+                            التصنيف
+                        </label>
+
+                        <input
+                            type="text"
+                            id="category"
+                            placeholder="مثال: عناية بالشفاه"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="price">
+                            السعر (ج.م) *
+                        </label>
+
+                        <input
+                            type="number"
+                            id="price"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="stock">
+                            المخزون
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stock"
+                            min="0"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="description">
+                            الوصف
+                        </label>
+
+                        <textarea
+                            id="description"
+                            placeholder="اكتبي وصفاً جذاباً للمنتج..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="image">
+                            صورة المنتج
+                        </label>
+
+                        <input
+                            type="file"
+                            id="image"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                        >
+
+                        <small>
+                            JPG / PNG / WEBP - الحد الأقصى 5 MB
+                        </small>
+
+
+                        <div
+                            class="preview-container"
+                            id="imagePreview"
+                        ></div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="saveButton"
+                    >
+                        إضافة المنتج
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancelButton"
+                        style="display:none;"
+                    >
+                        إلغاء التعديل
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- Products -->
+
+        <div class="products-header">
+
+            <h2>
+                المنتجات الحالية
+            </h2>
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="loadProducts()"
+            >
+                🔄 تحديث القائمة
+            </button>
+
+        </div>
+
+
+        <div
+            id="productsContainer"
+            class="products-grid"
+        >
+
+            <div class="loading">
+                جاري تحميل المنتجات...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =====================================================
+    // SUPABASE
+    // =====================================================
+
+    const SUPABASE_URL =
+        "https://bxnoptezcizpryzbxcjr.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_kgPlJ5qLDEdBkAfjOwVVkg_GVQ9fzud";
+
+
+    const STORAGE_BUCKET =
+        "product-images";
+
+
+    const {
+        createClient
+    } = supabase;
+
+
+    const supabaseClient =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    // =====================================================
+    // VARIABLES
+    // =====================================================
+
+    let editingProductId = null;
+
+    let editingOldImageUrl = null;
+
+
+    // =====================================================
+    // DOM
+    // =====================================================
+
+    const loginScreen =
+        document.getElementById("loginScreen");
+
+
+    const adminPanel =
+        document.getElementById("adminPanel");
+
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+
+    const loginEmail =
+        document.getElementById("loginEmail");
+
+
+    const loginPassword =
+        document.getElementById("loginPassword");
+
+
+    const loginButton =
+        document.getElementById("loginButton");
+
+
+    const loginError =
+        document.getElementById("loginError");
+
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+
+    const adminEmail =
+        document.getElementById("adminEmail");
+
+
+    const productForm =
+        document.getElementById("productForm");
+
+
+    const nameInput =
+        document.getElementById("name");
+
+
+    const descriptionInput =
+        document.getElementById("description");
+
+
+    const priceInput =
+        document.getElementById("price");
+
+
+    const stockInput =
+        document.getElementById("stock");
+
+
+    const categoryInput =
+        document.getElementById("category");
+
+
+    const imageInput =
+        document.getElementById("image");
+
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+
+    const productsContainer =
+        document.getElementById("productsContainer");
+
+
+    const statusElement =
+        document.getElementById("status");
+
+
+    const formTitle =
+        document.getElementById("formTitle");
+
+
+    const saveButton =
+        document.getElementById("saveButton");
+
+
+    const cancelButton =
+        document.getElementById("cancelButton");
+
+
+    // =====================================================
+    // LOGIN
+    // =====================================================
+
+    loginForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            loginError.style.display =
+                "none";
+
+
+            loginButton.disabled =
+                true;
+
+
+            loginButton.innerText =
+                "جاري تسجيل الدخول...";
+
+
+            try {
+
+                const email =
+                    loginEmail.value.trim();
+
+
+                const password =
+                    loginPassword.value;
+
+
+                // Supabase Auth
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth
+                        .signInWithPassword({
+
+                            email:
+                                email,
+
+                            password:
+                                password
+
+                        });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                if (!data.user) {
+
+                    throw new Error(
+                        "فشل تسجيل الدخول"
+                    );
+
+                }
+
+
+                // التأكد أن المستخدم Admin
+
+                const {
+                    data: admin,
+                    error: adminError
+                } =
+                    await supabaseClient
+                        .from("admin_users")
+                        .select("id,email,is_admin")
+                        .eq(
+                            "id",
+                            data.user.id
+                        )
+                        .eq(
+                            "is_admin",
+                            true
+                        )
+                        .maybeSingle();
+
+
+                if (adminError) {
+
+                    throw adminError;
+
+                }
+
+
+                if (!admin) {
+
+                    await supabaseClient.auth.signOut();
+
+                    throw new Error(
+                        "هذا الحساب ليس لديه صلاحية دخول لوحة الإدارة"
+                    );
+
+                }
+
+
+                // فتح لوحة الإدارة
+
+                showAdmin(
+                    data.user
+                );
+
+            }
+            catch(error) {
+
+                console.error(
+                    "Login Error:",
+                    error
+                );
+
+
+                loginError.innerText =
+                    getAuthErrorMessage(
+                        error
+                    );
+
+
+                loginError.style.display =
+                    "block";
+
+            }
+            finally {
+
+                loginButton.disabled =
+                    false;
+
+
+                loginButton.innerText =
+                    "تسجيل الدخول";
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // AUTH ERROR
+    // =====================================================
+
+    function getAuthErrorMessage(error) {
+
+        const message =
+            error?.message || "";
+
+
+        if (
+            message.toLowerCase()
+                .includes("invalid login credentials")
+        ) {
+
+            return "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+
+        }
+
+
+        if (
+            message.toLowerCase()
+                .includes("email not confirmed")
+        ) {
+
+            return "يجب تأكيد البريد الإلكتروني أولاً";
+
+        }
+
+
+        return message ||
+            "حدث خطأ أثناء تسجيل الدخول";
+
+    }
+
+
+    // =====================================================
+    // SHOW ADMIN
+    // =====================================================
+
+    function showAdmin(user) {
+
+        loginScreen.style.display =
+            "none";
+
+
+        adminPanel.style.display =
+            "block";
+
+
+        adminEmail.innerText =
+            user.email || "";
+
+
+        loadProducts();
+
+    }
+
+
+    // =====================================================
+    // LOGOUT
+    // =====================================================
+
+    logoutButton.addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient.auth
+                .signOut();
+
+
+            adminPanel.style.display =
+                "none";
+
+
+            loginScreen.style.display =
+                "flex";
+
+
+            loginForm.reset();
+
+
+            loginError.style.display =
+                "none";
+
+        }
+    );
+
+
+    // =====================================================
+    // CHECK EXISTING SESSION
+    // =====================================================
+
+    async function checkSession() {
+
+        try {
+
+            const {
+                data: {
+                    session
+                }
+            } =
+                await supabaseClient.auth
+                    .getSession();
+
+
+            if (!session) {
+
+                loginScreen.style.display =
+                    "flex";
+
+                adminPanel.style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            const user =
+                session.user;
+
+
+            // التأكد من Admin
+
+            const {
+                data: admin,
+                error
+            } =
+                await supabaseClient
+                    .from("admin_users")
+                    .select("id,email,is_admin")
+                    .eq(
+                        "id",
+                        user.id
+                    )
+                    .eq(
+                        "is_admin",
+                        true
+                    )
+                    .maybeSingle();
+
+
+            if (error || !admin) {
+
+                await supabaseClient.auth
+                    .signOut();
+
+
+                return;
+
+            }
+
+
+            showAdmin(user);
+
+        }
+        catch(error) {
+
+            console.error(
+                "Session Error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // IMAGE PREVIEW
+    // =====================================================
+
+    imageInput.addEventListener(
+        "change",
+        function() {
+
+            const file =
+                this.files[0];
+
+
+            if (!file) {
+
+                imagePreview.innerHTML =
+                    "";
+
+                return;
+
+            }
+
+
+            if (
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                alert(
+                    "الملف يجب أن يكون صورة"
+                );
+
+
+                this.value =
+                    "";
+
+
+                return;
+
+            }
+
+
+            if (
+                file.size >
+                5 * 1024 * 1024
+            ) {
+
+                alert(
+                    "حجم الصورة يجب ألا يتجاوز 5 MB"
+                );
+
+
+                this.value =
+                    "";
+
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(event) {
+
+                    imagePreview.innerHTML = `
+
+                        <img
+                            src="${event.target.result}"
+                            alt="Preview"
+                        >
+
+                    `;
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
+
+
+    // =====================================================
+    // UPLOAD IMAGE
+    // =====================================================
+
+    async function uploadProductImage(file) {
+
+        if (!file) {
+
+            return null;
+
+        }
+
+
+        if (
+            !file.type.startsWith(
+                "image/"
+            )
+        ) {
+
+            throw new Error(
+                "الملف يجب أن يكون صورة"
+            );
+
+        }
+
+
+        if (
+            file.size >
+            5 * 1024 * 1024
+        ) {
+
+            throw new Error(
+                "حجم الصورة يجب ألا يتجاوز 5 MB"
+            );
+
+        }
+
+
+        const extension =
+            file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+        const fileName =
+            `${crypto.randomUUID()}.${extension}`;
+
+
+        const filePath =
+            `products/${fileName}`;
+
+
+        const {
+            error
+        } =
+            await supabaseClient.storage
+                .from(STORAGE_BUCKET)
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        upsert: false,
+                        contentType:
+                            file.type
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Upload Error:",
+                error
+            );
+
+
+            throw error;
+
+        }
+
+
+        const {
+            data
+        } =
+            supabaseClient.storage
+                .from(STORAGE_BUCKET)
+                .getPublicUrl(
+                    filePath
+                );
+
+
+        return data.publicUrl;
+
+    }
+
+
+    // =====================================================
+    // DELETE IMAGE
+    // =====================================================
+
+    async function deleteProductImage(
+        imageUrl
+    ) {
+
+        if (!imageUrl) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const marker =
+                `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+
+
+            const index =
+                imageUrl.indexOf(
+                    marker
+                );
+
+
+            if (index === -1) {
+
+                return;
+
+            }
+
+
+            const filePath =
+                imageUrl.substring(
+                    index + marker.length
+                );
+
+
+            const {
+                error
+            } =
+                await supabaseClient.storage
+                    .from(STORAGE_BUCKET)
+                    .remove([
+                        filePath
+                    ]);
+
+
+            if (error) {
+
+                console.error(
+                    "Delete image error:",
+                    error
+                );
+
+            }
+
+        }
+        catch(error) {
+
+            console.error(
+                "Delete image error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // LOAD PRODUCTS
+    // =====================================================
+
+    async function loadProducts() {
+
+        productsContainer.innerHTML = `
+
+            <div class="loading">
+                جاري تحميل المنتجات...
+            </div>
+
+        `;
+
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("products")
+                    .select("*")
+                    .order(
+                        "id",
+                        {
+                            ascending:
+                                false
+                        }
+                    );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            statusElement.className =
+                "status";
+
+
+            statusElement.innerHTML =
+
+                `✅ تم الاتصال بنجاح - عدد المنتجات: ${data.length}`;
+
+
+            displayProducts(
+                data
+            );
+
+        }
+        catch(error) {
+
+            console.error(error);
+
+
+            statusElement.className =
+                "status error";
+
+
+            statusElement.innerHTML =
+
+                `❌ خطأ: ${error.message}`;
+
+
+            productsContainer.innerHTML = `
+
+                <div class="empty">
+
+                    فشل تحميل المنتجات
+
+                    <br><br>
+
+                    ${escapeHtml(error.message)}
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // DISPLAY PRODUCTS
+    // =====================================================
+
+    function displayProducts(
+        products
+    ) {
+
+        if (!products.length) {
+
+            productsContainer.innerHTML = `
+
+                <div class="empty">
+
+                    لا توجد منتجات حتى الآن
+
+                </div>
+
+            `;
+
+
+            return;
+
+        }
+
+
+        productsContainer.innerHTML =
+
+            products
+                .map(
+                    product =>
+                        createProductCard(
+                            product
+                        )
+                )
+                .join("");
+
+    }
+
+
+    // =====================================================
+    // PRODUCT CARD
+    // =====================================================
+
+    function createProductCard(
+        product
+    ) {
+
+        let imageHtml;
+
+
+        if (product.image_url) {
+
+            imageHtml = `
+
+                <img
+
+                    src="${escapeHtml(product.image_url)}"
+
+                    alt="${escapeHtml(product.name)}"
+
+                    class="product-image"
+
+                    loading="lazy"
+
+                    onerror="
+                        this.style.display='none';
+                        this.parentElement
+                            .querySelector('.no-image')
+                            .style.display='flex';
+                    "
+
+                >
+
+                <div
+                    class="no-image"
+                    style="display:none;"
+                >
+                    الصورة غير متاحة
+                </div>
+
+            `;
+
+        }
+        else {
+
+            imageHtml = `
+
+                <div class="no-image">
+
+                    لا توجد صورة
+
+                </div>
+
+            `;
+
+        }
+
+
+        return `
+
+            <div class="product-card">
+
+                <div class="product-image-container">
+
+                    ${imageHtml}
+
+                </div>
+
+
+                <div class="product-content">
+
+                    <div class="product-name">
+
+                        ${escapeHtml(
+                            product.name
+                        )}
+
+                    </div>
+
+
+                    ${
+                        product.category
+
+                        ?
+
+                        `<span class="product-category">
+
+                            ${escapeHtml(
+                                product.category
+                            )}
+
+                        </span>`
+
+                        :
+
+                        ""
+                    }
+
+
+                    <div class="product-description">
+
+                        ${escapeHtml(
+                            product.description || ""
+                        )}
+
+                    </div>
+
+
+                    <div class="product-price">
+
+                        ${formatPrice(
+                            product.price
+                        )}
+
+                        ج.م
+
+                    </div>
+
+
+                    <div class="product-stock">
+
+                        المخزون:
+
+                        ${product.stock ?? 0}
+
+                    </div>
+
+
+                    <div class="card-actions">
+
+                        <button
+                            class="btn btn-edit"
+                            onclick="editProduct(${product.id})"
+                        >
+                            تعديل
+                        </button>
+
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="removeProduct(${product.id})"
+                        >
+                            حذف
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // EDIT PRODUCT
+    // =====================================================
+
+    async function editProduct(id) {
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("products")
+                    .select("*")
+                    .eq(
+                        "id",
+                        id
+                    )
+                    .single();
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            editingProductId =
+                data.id;
+
+
+            editingOldImageUrl =
+                data.image_url;
+
+
+            nameInput.value =
+                data.name || "";
+
+
+            descriptionInput.value =
+                data.description || "";
+
+
+            priceInput.value =
+                data.price ?? 0;
+
+
+            stockInput.value =
+                data.stock ?? 0;
+
+
+            categoryInput.value =
+                data.category || "";
+
+
+            imageInput.value =
+                "";
+
+
+            if (data.image_url) {
+
+                imagePreview.innerHTML = `
+
+                    <div
+                        style="
+                            margin-bottom:8px;
+                            color:var(--mauve);
+                        "
+                    >
+                        الصورة الحالية:
+                    </div>
+
+
+                    <img
+                        src="${escapeHtml(data.image_url)}"
+                        alt="Current Image"
+                    >
+
+                `;
+
+            }
+            else {
+
+                imagePreview.innerHTML =
+                    "";
+
+            }
+
+
+            formTitle.innerText =
+                "تعديل المنتج";
+
+
+            saveButton.innerText =
+                "حفظ التعديلات";
+
+
+            cancelButton.style.display =
+                "inline-flex";
+
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior:
+                    "smooth"
+
+            });
+
+        }
+        catch(error) {
+
+            alert(
+                error.message
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SAVE PRODUCT
+    // =====================================================
+
+    productForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            try {
+
+                saveButton.disabled =
+                    true;
+
+
+                saveButton.innerText =
+                    "جاري الحفظ...";
+
+
+                const file =
+                    imageInput.files[0];
+
+
+                let imageUrl =
+                    editingOldImageUrl;
+
+
+                // صورة جديدة
+
+                if (file) {
+
+                    imageUrl =
+                        await uploadProductImage(
+                            file
+                        );
+
+                }
+
+
+                const product = {
+
+                    name:
+                        nameInput.value.trim(),
+
+                    description:
+                        descriptionInput.value.trim(),
+
+                    price:
+                        parseFloat(
+                            priceInput.value
+                        ) || 0,
+
+                    stock:
+                        parseInt(
+                            stockInput.value
+                        ) || 0,
+
+                    category:
+                        categoryInput.value.trim(),
+
+                    image_url:
+                        imageUrl,
+
+                    is_active:
+                        true
+
+                };
+
+
+                // ADD
+
+                if (!editingProductId) {
+
+                    const {
+                        error
+                    } =
+                        await supabaseClient
+                            .from("products")
+                            .insert(
+                                product
+                            );
+
+
+                    if (error) {
+
+                        throw error;
+
+                    }
+
+
+                    alert(
+                        "تم إضافة المنتج بنجاح 🎉"
+                    );
+
+                }
+
+
+                // UPDATE
+
+                else {
+
+                    const {
+                        error
+                    } =
+                        await supabaseClient
+                            .from("products")
+                            .update(
+                                product
+                            )
+                            .eq(
+                                "id",
+                                editingProductId
+                            );
+
+
+                    if (error) {
+
+                        throw error;
+
+                    }
+
+
+                    // حذف الصورة القديمة
+
+                    if (
+                        file &&
+                        editingOldImageUrl &&
+                        editingOldImageUrl !== imageUrl
+                    ) {
+
+                        await deleteProductImage(
+                            editingOldImageUrl
+                        );
+
+                    }
+
+
+                    alert(
+                        "تم تعديل المنتج بنجاح ✅"
+                    );
+
+                }
+
+
+                resetForm();
+
+
+                await loadProducts();
+
+            }
+            catch(error) {
+
+                console.error(error);
+
+
+                alert(
+                    "خطأ: " +
+                    error.message
+                );
+
+            }
+            finally {
+
+                saveButton.disabled =
+                    false;
+
+
+                saveButton.innerText =
+                    editingProductId
+                        ?
+                        "حفظ التعديلات"
+                        :
+                        "إضافة المنتج";
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // DELETE PRODUCT
+    // =====================================================
+
+    async function removeProduct(id) {
+
+        if (
+            !confirm(
+                "هل أنت متأكد من حذف هذا المنتج؟"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        try {
+
+            // Get product
+
+            const {
+                data: product,
+                error: getError
+            } =
+                await supabaseClient
+                    .from("products")
+                    .select("image_url")
+                    .eq(
+                        "id",
+                        id
+                    )
+                    .single();
+
+
+            if (getError) {
+
+                throw getError;
+
+            }
+
+
+            // Delete product
+
+            const {
+                error: deleteError
+            } =
+                await supabaseClient
+                    .from("products")
+                    .delete()
+                    .eq(
+                        "id",
+                        id
+                    );
+
+
+            if (deleteError) {
+
+                throw deleteError;
+
+            }
+
+
+            // Delete image
+
+            if (
+                product &&
+                product.image_url
+            ) {
+
+                await deleteProductImage(
+                    product.image_url
+                );
+
+            }
+
+
+            alert(
+                "تم حذف المنتج بنجاح"
+            );
+
+
+            await loadProducts();
+
+        }
+        catch(error) {
+
+            console.error(error);
+
+
+            alert(
+                "خطأ في الحذف: " +
+                error.message
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // CANCEL EDIT
+    // =====================================================
+
+    cancelButton.addEventListener(
+        "click",
+        resetForm
+    );
+
+
+    // =====================================================
+    // RESET FORM
+    // =====================================================
+
+    function resetForm() {
+
+        editingProductId =
+            null;
+
+
+        editingOldImageUrl =
+            null;
+
+
+        productForm.reset();
+
+
+        imagePreview.innerHTML =
+            "";
+
+
+        formTitle.innerText =
+            "إضافة منتج جديد";
+
+
+        saveButton.innerText =
+            "إضافة المنتج";
+
+
+        cancelButton.style.display =
+            "none";
+
+    }
+
+
+    // =====================================================
+    // FORMAT PRICE
+    // =====================================================
+
+    function formatPrice(price) {
+
+        return (
+            parseFloat(price) || 0
+        ).toLocaleString(
+            "ar-EG",
+            {
+                minimumFractionDigits:
+                    2,
+
+                maximumFractionDigits:
+                    2
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // ESCAPE HTML
+    // =====================================================
+
+    function escapeHtml(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+
+        }
+
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    // =====================================================
+    // START
+    // =====================================================
+
+    checkSession();
+
+
+</script>
+
+</body>
+
+</html>
