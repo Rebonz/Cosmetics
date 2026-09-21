@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rebonz.github.io/Cosmetics/sitemap.xml
