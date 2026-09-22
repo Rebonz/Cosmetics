@@ -71,6 +71,7 @@
   .promo-marquee .marquee-track{
     display:flex; width:max-content;
     animation:marquee-scroll 26s linear infinite;
+    will-change:transform;
   }
   .promo-marquee:hover .marquee-track{animation-play-state:paused;}
   .promo-marquee .marquee-seg{
@@ -237,6 +238,21 @@
   .section-head p{color:var(--mauve); font-size:1.05rem; margin:0; max-width:52ch;}
   .section-head.center{margin-inline:auto; text-align:center;}
 
+  /* ---------- category filters ---------- */
+  .category-filters{
+    display:flex; flex-wrap:wrap; gap:10px; margin:-8px 0 28px;
+  }
+  .cat-btn{
+    background:var(--paper); color:var(--mauve); border:1.5px solid rgba(43,22,32,0.15);
+    padding:9px 20px; border-radius:999px; font-weight:700; font-size:.88rem;
+    transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .cat-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+  .cat-btn.active{
+    background:var(--rose-deep); color:var(--paper); border-color:var(--rose-deep);
+    box-shadow:0 10px 20px -10px rgba(178,58,92,0.55);
+  }
+
   /* ---------- products carousel ---------- */
   .carousel-wrap{position:relative;}
   .carousel{
@@ -337,6 +353,52 @@
     background:var(--paper); border-radius:24px; font-size:1rem;
   }
   .products-msg .btn{margin-top:16px;}
+
+  /* ---------- product details modal ---------- */
+  .product-media{cursor:pointer;}
+  .modal-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(43,22,32,0.55); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .modal-overlay.open{opacity:1; pointer-events:auto;}
+  .modal-content{
+    position:relative; background:var(--paper); border-radius:26px; overflow:hidden;
+    box-shadow:var(--shadow); width:100%; max-width:760px; max-height:88vh; overflow-y:auto;
+    display:grid; grid-template-columns:1fr 1fr;
+    transform:translateY(18px) scale(.98); transition:transform .3s ease;
+  }
+  .modal-overlay.open .modal-content{transform:translateY(0) scale(1);}
+  .modal-close{
+    position:absolute; top:14px; left:14px; z-index:2;
+    width:38px; height:38px; border-radius:50%; border:none;
+    background:rgba(255,253,252,0.85); color:var(--plum-ink); font-size:1.05rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 14px -6px rgba(43,22,32,0.35);
+  }
+  .modal-close:hover{background:var(--paper);}
+  .modal-media{
+    position:relative; aspect-ratio:3/4; background:linear-gradient(150deg, var(--rose-soft), var(--rose-mid));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .modal-media img{width:100%; height:100%; object-fit:cover;}
+  .modal-body{padding:32px 30px; display:flex; flex-direction:column;}
+  .modal-tag{
+    align-self:flex-start; background:var(--rose-soft); color:var(--rose-deep-2);
+    font-weight:700; font-size:.8rem; padding:6px 14px; border-radius:999px; margin-bottom:14px;
+  }
+  .modal-body h3{
+    margin:0 0 14px; font-family:var(--font-display); font-weight:400; font-size:1.7rem; line-height:1.3;
+  }
+  .modal-desc{color:var(--mauve); font-size:.98rem; line-height:1.8; margin:0 0 24px;}
+  .modal-foot{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; flex-wrap:wrap;}
+  .modal-foot .price{font-size:1.3rem;}
+  @media (max-width:640px){
+    .modal-content{grid-template-columns:1fr; max-height:92vh;}
+    .modal-media{aspect-ratio:4/3;}
+    .modal-body{padding:24px 22px;}
+  }
 
   /* ---------- features ---------- */
   .features-block{
@@ -519,19 +581,14 @@
 <div class="grain"></div>
 
 <div class="promo-marquee" role="note" aria-label="عروض خاصة">
-  <div class="marquee-track">
-    <div class="marquee-seg">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-seg" id="marqueeSeg">
       <span class="item">خصم 50% لفترة محدودة 🔥</span>
       <span class="item">شحن مجاني لجميع الطلبات فوق 400 جنيه🚚</span>
       <span class="item">خصم 50% لفترة محدودة 🔥</span>
-      <span class="item">شحن مجاني لجميع الطلبات 🚚</span>
-    </div>
-    <div class="marquee-seg" aria-hidden="true">
-      <span class="item">خصم 50% لفترة محدودة خااااااااص🔥</span>
-      <span class="item">  شحن مجاني لجميع الطلبات فوق 400 جنيه🚚</span>
-      <span class="item">خصم 50% لفترة محدودة 🔥</span>
       <span class="item">شحن مجاني لجميع الطلبات فوق 400 جنيه🚚</span>
     </div>
+    <!-- النسخة المطابقة بتتضاف تلقائيًا بالـ JS عشان اللفة تكون متواصلة من غير قطع -->
   </div>
 </div>
 
@@ -596,6 +653,7 @@
         <h2>الأكثر طلبًا من متابعاتنا</h2>
         <p>مجموعة مختارة من أكثر المنتجات اللي بتتكرر في طلباتكم — من زيوت الشفاه لتينت الحواجب.</p>
       </div>
+      <div class="category-filters" id="categoryFilters" role="tablist" aria-label="تصنيف المنتجات"></div>
       <div class="carousel-wrap">
         <div class="carousel" id="carousel" aria-live="polite">
           <!-- skeleton أثناء التحميل -->
@@ -759,7 +817,38 @@
   </div>
 </footer>
 
+<!-- ================= PRODUCT DETAILS MODAL ================= -->
+<div class="modal-overlay" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose" aria-label="إغلاق">✕</button>
+    <div class="modal-media" id="modalMedia"></div>
+    <div class="modal-body">
+      <span class="modal-tag" id="modalTag"></span>
+      <h3 id="modalTitle"></h3>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-foot">
+        <span class="price" id="modalPrice"></span>
+        <span id="modalStock"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  // =====================================================
+  // Marquee: نسخ الشريط تلقائيًا عشان اللفة تكون متواصلة
+  // (بننسخ نفس المحتوى بالظبط فمافيش فرق في العرض يعمل وقفة/قطع)
+  // =====================================================
+  (function initMarquee(){
+    const track = document.getElementById('marqueeTrack');
+    const seg = document.getElementById('marqueeSeg');
+    if(!track || !seg) return;
+    const clone = seg.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  })();
+
   // =====================================================
   // Supabase
   // =====================================================
@@ -770,6 +859,10 @@
   const LOW_STOCK_THRESHOLD = 5;
 
   const carousel = document.getElementById('carousel');
+  const categoryFilters = document.getElementById('categoryFilters');
+  let allProducts = [];
+  const productsById = new Map();
+  let activeCategory = 'الكل';
 
   function escapeHtml(text){
     if (text === null || text === undefined) return '';
@@ -819,8 +912,8 @@
       : placeholderHtml;
 
     return `
-      <article class="product-card${out ? ' is-out' : ''}" style="animation-delay:${Math.min(i, 8) * 0.07}s">
-        <div class="product-media">
+      <article class="product-card${out ? ' is-out' : ''}" data-id="${escapeHtml(String(p.id ?? i))}" style="animation-delay:${Math.min(i, 8) * 0.07}s">
+        <div class="product-media" role="button" tabindex="0" aria-label="عرض تفاصيل ${escapeHtml(p.name)}">
           ${media}
           ${tag}
           ${out ? '<div class="sold-ribbon">نفدت الكمية</div>' : ''}
@@ -840,6 +933,57 @@
     carousel.innerHTML = `<div class="products-msg">${html}</div>`;
   }
 
+  function renderProducts(list){
+    if (!Array.isArray(list) || list.length === 0){
+      showMessage('مفيش منتجات في التصنيف ده حاليًا 🩷');
+      return;
+    }
+    carousel.innerHTML = list.map(productCard).join('');
+  }
+
+  // ---------------------------------------------------
+  // تصنيفات المنتجات (Product Category)
+  // ---------------------------------------------------
+  function renderCategoryFilters(){
+    if (!categoryFilters) return;
+    const cats = Array.from(new Set(
+      allProducts.map(p => (p.category || '').trim()).filter(Boolean)
+    ));
+
+    if (cats.length === 0){
+      categoryFilters.innerHTML = '';
+      return;
+    }
+
+    const all = ['الكل', ...cats];
+    categoryFilters.innerHTML = all.map(cat => `
+      <button type="button" class="cat-btn${cat === activeCategory ? ' active' : ''}"
+        data-cat="${escapeHtml(cat)}" role="tab" aria-selected="${cat === activeCategory}">
+        ${escapeHtml(cat)}
+      </button>`).join('');
+  }
+
+  function applyCategoryFilter(cat){
+    activeCategory = cat;
+    categoryFilters.querySelectorAll('.cat-btn').forEach(btn => {
+      const isActive = btn.dataset.cat === cat;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive);
+    });
+    const filtered = cat === 'الكل'
+      ? allProducts
+      : allProducts.filter(p => (p.category || '').trim() === cat);
+    renderProducts(filtered);
+  }
+
+  if (categoryFilters){
+    categoryFilters.addEventListener('click', (e) => {
+      const btn = e.target.closest('.cat-btn');
+      if (!btn) return;
+      applyCategoryFilter(btn.dataset.cat);
+    });
+  }
+
   async function loadProducts(){
     try{
       const url = `${SUPABASE_URL}/rest/v1/products?select=*&is_active=eq.true&order=id.desc`;
@@ -853,7 +997,14 @@
         showMessage('مفيش منتجات متاحة حاليًا، ارجعي تاني قريب 🩷');
         return;
       }
-      carousel.innerHTML = products.map(productCard).join('');
+
+      allProducts = products;
+      productsById.clear();
+      products.forEach((p, i) => productsById.set(String(p.id ?? i), p));
+
+      activeCategory = 'الكل';
+      renderCategoryFilters();
+      renderProducts(allProducts);
     }catch(err){
       console.error('Failed to load products:', err);
       showMessage('حصلت مشكلة في تحميل المنتجات.<br><button class="btn" id="retryBtn" type="button">إعادة المحاولة</button>');
@@ -862,6 +1013,73 @@
     }
   }
   window.addEventListener('DOMContentLoaded', loadProducts);
+
+  // ---------------------------------------------------
+  // مودال تفاصيل المنتج
+  // ---------------------------------------------------
+  const productModal = document.getElementById('productModal');
+  const modalClose = document.getElementById('modalClose');
+  const modalMedia = document.getElementById('modalMedia');
+  const modalTag = document.getElementById('modalTag');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalPrice = document.getElementById('modalPrice');
+  const modalStock = document.getElementById('modalStock');
+
+  function openProductModal(id){
+    const p = productsById.get(id);
+    if (!p || !productModal) return;
+
+    const stock = getStock(p);
+    const img = safeImageUrl(p.image_url);
+    modalMedia.innerHTML = img
+      ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(p.name)}" onerror="this.remove();">`
+      : placeholderHtml;
+    modalTag.textContent = p.category || '';
+    modalTag.style.display = p.category ? '' : 'none';
+    modalTitle.textContent = p.name || '';
+    modalDesc.textContent = p.description || 'منتج مميز من Rebonz Cosmetics للعناية بجمالك.';
+    modalPrice.textContent = (p.price !== null && p.price !== undefined && p.price !== '')
+      ? `${arNum(p.price)} ج.م` : '';
+    modalStock.innerHTML = stockBadge(stock);
+
+    productModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProductModal(){
+    if (!productModal) return;
+    productModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (carousel){
+    carousel.addEventListener('click', (e) => {
+      const media = e.target.closest('.product-media');
+      if (!media) return;
+      const card = media.closest('.product-card');
+      if (!card) return;
+      openProductModal(card.dataset.id);
+    });
+    carousel.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const media = e.target.closest('.product-media');
+      if (!media) return;
+      e.preventDefault();
+      const card = media.closest('.product-card');
+      if (!card) return;
+      openProductModal(card.dataset.id);
+    });
+  }
+  if (modalClose) modalClose.addEventListener('click', closeProductModal);
+  if (productModal){
+    productModal.addEventListener('click', (e) => {
+      if (e.target === productModal) closeProductModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeProductModal();
+  });
 
   // =====================================================
   // mobile nav
