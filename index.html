@@ -162,6 +162,27 @@
   .btn-ghost:hover{border-color:var(--rose-deep); color:var(--rose-deep); background:rgba(178,58,92,0.06);}
   .menu-toggle{display:none; background:none; border:none; font-size:1.6rem; color:var(--plum-ink);}
 
+  /* ---------- cart trigger ---------- */
+  .cart-trigger{
+    position:relative; display:inline-flex; align-items:center; justify-content:center;
+    width:44px; height:44px; border-radius:50%; border:1.5px solid rgba(43,22,32,0.18);
+    background:var(--paper); color:var(--plum-ink); flex:none;
+    transition:border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .cart-trigger:hover{border-color:var(--rose-deep); color:var(--rose-deep); transform:translateY(-2px);}
+  .cart-trigger svg{width:21px; height:21px; stroke:currentColor;}
+  .cart-count{
+    position:absolute; top:-6px; left:-6px; min-width:20px; height:20px; padding:0 4px;
+    border-radius:999px; background:var(--rose-deep); color:var(--paper);
+    font-size:.7rem; font-weight:800; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px -4px rgba(178,58,92,0.6); transform:scale(0); transition:transform .25s ease;
+  }
+  .cart-count.show{transform:scale(1);}
+  @media (max-width:440px){
+    .cart-trigger{width:38px; height:38px;}
+    .cart-trigger svg{width:18px; height:18px;}
+  }
+
   /* ---------- hero ---------- */
   .hero{position:relative; z-index:2; padding:76px 0 60px;}
   .hero-grid{
@@ -327,6 +348,20 @@
   .stock-badge.low{background:var(--warn-bg); color:var(--warn);}
   .stock-badge.out{background:var(--bad-bg); color:var(--bad);}
 
+  /* ---------- add to cart ---------- */
+  .add-cart-row{margin-top:12px;}
+  .add-cart-btn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--rose-deep); color:var(--paper); border:none;
+    padding:11px 14px; border-radius:14px; font-weight:700; font-size:.88rem;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .add-cart-btn:hover{background:var(--rose-deep-2); transform:translateY(-1px);}
+  .add-cart-btn svg{width:17px; height:17px; stroke:currentColor; flex:none;}
+  .add-cart-btn:disabled{background:rgba(43,22,32,0.15); color:var(--mauve); cursor:not-allowed; transform:none;}
+  .add-cart-btn.added{background:var(--ok);}
+  .modal-foot .add-cart-btn{width:auto; padding:12px 26px; border-radius:999px;}
+
   .carousel-nav{display:flex; gap:12px; justify-content:flex-end; margin-top:8px;}
   .nav-btn{
     width:44px; height:44px; border-radius:50%; border:1.5px solid rgba(43,22,32,0.2);
@@ -398,6 +433,67 @@
     .modal-content{grid-template-columns:1fr; max-height:92vh;}
     .modal-media{aspect-ratio:4/3;}
     .modal-body{padding:24px 22px;}
+  }
+
+  /* ---------- cart drawer ---------- */
+  .cart-overlay{
+    position:fixed; inset:0; z-index:220;
+    background:rgba(43,22,32,0.5); backdrop-filter:blur(2px);
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  .cart-overlay.open{opacity:1; pointer-events:auto;}
+  .cart-drawer{
+    position:fixed; top:0; bottom:0; right:0; z-index:221;
+    width:min(400px, 92vw); background:var(--cream); box-shadow:var(--shadow);
+    display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+  }
+  [dir="rtl"] .cart-drawer{right:0; transform:translateX(100%);}
+  .cart-overlay.open .cart-drawer{transform:translateX(0);}
+  .cart-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:20px 22px; border-bottom:1px solid rgba(43,22,32,0.1); background:var(--paper);
+  }
+  .cart-head h3{margin:0; font-family:var(--font-display); font-weight:400; font-size:1.35rem;}
+  .cart-close{
+    width:36px; height:36px; border-radius:50%; border:none; background:var(--rose-soft);
+    color:var(--rose-deep-2); font-size:1rem; display:flex; align-items:center; justify-content:center;
+  }
+  .cart-close:hover{background:var(--rose-mid);}
+  .cart-items{flex:1; overflow-y:auto; padding:16px 22px;}
+  .cart-empty{text-align:center; color:var(--mauve); padding:60px 10px; font-size:.95rem;}
+  .cart-empty svg{width:52px; height:52px; stroke:var(--rose-mid); margin-bottom:14px;}
+  .cart-item{
+    display:flex; gap:14px; padding:14px 0; border-bottom:1px solid rgba(43,22,32,0.08);
+  }
+  .cart-item-img{
+    width:64px; height:64px; border-radius:14px; overflow:hidden; flex:none;
+    background:linear-gradient(150deg, var(--rose-soft), var(--rose-mid));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cart-item-img img{width:100%; height:100%; object-fit:cover;}
+  .cart-item-info{flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;}
+  .cart-item-info h4{margin:0; font-size:.95rem; font-weight:700; line-height:1.4;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .cart-item-price{font-size:.85rem; color:var(--mauve);}
+  .cart-item-row{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:4px;}
+  .qty-ctrl{display:flex; align-items:center; gap:0; border:1.5px solid rgba(43,22,32,0.15); border-radius:999px; overflow:hidden;}
+  .qty-ctrl button{
+    width:28px; height:28px; background:var(--paper); border:none; font-size:1rem; font-weight:700;
+    color:var(--rose-deep); display:flex; align-items:center; justify-content:center;
+  }
+  .qty-ctrl button:hover{background:var(--rose-soft);}
+  .qty-ctrl button:disabled{color:var(--mauve); cursor:not-allowed;}
+  .qty-ctrl span{min-width:26px; text-align:center; font-size:.88rem; font-weight:700;}
+  .cart-item-remove{background:none; border:none; color:var(--bad); font-size:.8rem; font-weight:700; text-decoration:underline;}
+  .cart-foot{
+    padding:18px 22px 22px; border-top:1px solid rgba(43,22,32,0.1); background:var(--paper);
+  }
+  .cart-subtotal{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; font-weight:800; font-size:1.05rem;}
+  .cart-checkout-btn{width:100%; justify-content:center;}
+  .cart-note{font-size:.78rem; color:var(--mauve); text-align:center; margin:10px 0 0;}
+  @media (max-width:440px){
+    .cart-drawer{width:100vw;}
   }
 
   /* ---------- features ---------- */
@@ -609,6 +705,10 @@
     <div class="nav-cta">
       <a class="btn btn-ghost" href="https://www.instagram.com/rebonz_cosmetics" target="_blank" rel="noopener">إنستجرام</a>
       <a class="btn" href="#bestsellers">تسوقي الآن</a>
+      <button class="cart-trigger" id="cartTrigger" aria-label="سلة المشتريات" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7.5H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
       <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
     </div>
   </div>
@@ -830,8 +930,33 @@
         <span class="price" id="modalPrice"></span>
         <span id="modalStock"></span>
       </div>
+      <div class="add-cart-row">
+        <button type="button" class="add-cart-btn" id="modalAddCartBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7.5H6"/></svg>
+          أضيفي للسلة
+        </button>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="cart-overlay" id="cartOverlay">
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <div class="cart-head">
+      <h3 id="cartTitle">سلة المشتريات</h3>
+      <button class="cart-close" id="cartClose" aria-label="إغلاق السلة">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-subtotal">
+        <span>الإجمالي</span>
+        <span id="cartSubtotal">0 ج.م</span>
+      </div>
+      <button class="btn cart-checkout-btn" id="cartCheckoutBtn">إتمام الطلب عبر واتساب</button>
+      <p class="cart-note">هيتم تجهيز رسالة بتفاصيل طلبك وإرسالها على واتساب لتأكيد الطلب والدفع.</p>
+    </div>
+  </aside>
 </div>
 
 <script>
@@ -924,6 +1049,12 @@
           <div class="product-foot">
             <span class="price">${price}</span>
             ${stockBadge(stock)}
+          </div>
+          <div class="add-cart-row">
+            <button type="button" class="add-cart-btn" data-add-id="${escapeHtml(String(p.id ?? i))}" ${out ? 'disabled' : ''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7.5H6"/></svg>
+              ${out ? 'نفدت الكمية' : 'أضيفي للسلة'}
+            </button>
           </div>
         </div>
       </article>`;
@@ -1025,10 +1156,14 @@
   const modalDesc = document.getElementById('modalDesc');
   const modalPrice = document.getElementById('modalPrice');
   const modalStock = document.getElementById('modalStock');
+  const modalAddCartBtn = document.getElementById('modalAddCartBtn');
+
+  let currentModalProductId = null;
 
   function openProductModal(id){
     const p = productsById.get(id);
     if (!p || !productModal) return;
+    currentModalProductId = id;
 
     const stock = getStock(p);
     const img = safeImageUrl(p.image_url);
@@ -1042,6 +1177,14 @@
     modalPrice.textContent = (p.price !== null && p.price !== undefined && p.price !== '')
       ? `${arNum(p.price)} ج.م` : '';
     modalStock.innerHTML = stockBadge(stock);
+    if (modalAddCartBtn){
+      const out = stock !== null && stock <= 0;
+      modalAddCartBtn.disabled = out;
+      modalAddCartBtn.innerHTML = out
+        ? 'نفدت الكمية'
+        : `<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7.5H6"/></svg> أضيفي للسلة`;
+      modalAddCartBtn.classList.remove('added');
+    }
 
     productModal.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1080,6 +1223,217 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeProductModal();
   });
+
+  // =====================================================
+  // السلة (Cart)
+  // =====================================================
+  // ⚠️ غيّري الرقم ده لرقم واتساب المتجر (بصيغة دولية من غير + أو أصفار زيادة، مثال لمصر: 20xxxxxxxxxx)
+  const WHATSAPP_NUMBER = "201203136106";
+  const CART_STORAGE_KEY = "rebonz_cart_v1";
+
+  const cartTrigger = document.getElementById('cartTrigger');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartClose = document.getElementById('cartClose');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartSubtotalEl = document.getElementById('cartSubtotal');
+  const cartCountEl = document.getElementById('cartCount');
+  const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
+
+  function loadCart(){
+    try{
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return (parsed && typeof parsed === 'object') ? parsed : {};
+    }catch(err){
+      return {};
+    }
+  }
+
+  function saveCart(){
+    try{ localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart)); }catch(err){ /* تجاهل لو التخزين مش متاح */ }
+  }
+
+  let cart = loadCart(); // { [id]: qty }
+
+  function cartCount(){
+    return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+  }
+
+  function cartTotal(){
+    return Object.entries(cart).reduce((sum, [id, qty]) => {
+      const p = productsById.get(id);
+      const price = p && p.price ? Number(p.price) : 0;
+      return sum + price * qty;
+    }, 0);
+  }
+
+  function updateCartBadge(){
+    const count = cartCount();
+    cartCountEl.textContent = arNum(count);
+    cartCountEl.classList.toggle('show', count > 0);
+  }
+
+  function addToCart(id, btnEl){
+    const p = productsById.get(id);
+    if (!p) return;
+    const stock = getStock(p);
+    const current = cart[id] || 0;
+    if (stock !== null && current >= stock){
+      if (btnEl){
+        const original = btnEl.innerHTML;
+        btnEl.textContent = 'الكمية المتاحة خلصت في السلة';
+        setTimeout(() => { btnEl.innerHTML = original; }, 1400);
+      }
+      return;
+    }
+    cart[id] = current + 1;
+    saveCart();
+    updateCartBadge();
+    renderCartItems();
+    if (btnEl){
+      const original = btnEl.innerHTML;
+      btnEl.classList.add('added');
+      btnEl.innerHTML = 'اتضافت ✓';
+      setTimeout(() => {
+        btnEl.classList.remove('added');
+        btnEl.innerHTML = original;
+      }, 1000);
+    }
+  }
+
+  function changeQty(id, delta){
+    const p = productsById.get(id);
+    const stock = p ? getStock(p) : null;
+    const next = (cart[id] || 0) + delta;
+    if (next <= 0){
+      delete cart[id];
+    } else if (stock !== null && next > stock){
+      cart[id] = stock;
+    } else {
+      cart[id] = next;
+    }
+    saveCart();
+    updateCartBadge();
+    renderCartItems();
+  }
+
+  function removeFromCart(id){
+    delete cart[id];
+    saveCart();
+    updateCartBadge();
+    renderCartItems();
+  }
+
+  function cartItemRow(id, qty){
+    const p = productsById.get(id);
+    if (!p) return '';
+    const img = safeImageUrl(p.image_url);
+    const stock = getStock(p);
+    const priceNum = p.price ? Number(p.price) : 0;
+    const lineTotal = priceNum * qty;
+    const atMax = stock !== null && qty >= stock;
+    return `
+      <div class="cart-item" data-cart-id="${escapeHtml(id)}">
+        <div class="cart-item-img">${img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(p.name)}" onerror="this.remove();">` : ''}</div>
+        <div class="cart-item-info">
+          <h4>${escapeHtml(p.name)}</h4>
+          <span class="cart-item-price">${arNum(priceNum)} ج.م × ${arNum(qty)} = ${arNum(lineTotal)} ج.م</span>
+          <div class="cart-item-row">
+            <div class="qty-ctrl">
+              <button type="button" class="qty-minus" data-qty-id="${escapeHtml(id)}" aria-label="تقليل الكمية">−</button>
+              <span>${arNum(qty)}</span>
+              <button type="button" class="qty-plus" data-qty-id="${escapeHtml(id)}" aria-label="زيادة الكمية" ${atMax ? 'disabled' : ''}>+</button>
+            </div>
+            <button type="button" class="cart-item-remove" data-remove-id="${escapeHtml(id)}">إزالة</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderCartItems(){
+    const ids = Object.keys(cart).filter(id => productsById.has(id) && cart[id] > 0);
+    if (ids.length === 0){
+      cartItemsEl.innerHTML = `
+        <div class="cart-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7.5H6"/></svg>
+          <div>السلة فاضية دلوقتي 🩷<br>ابدأي تسوقي وضيفي منتجاتك المفضلة.</div>
+        </div>`;
+    } else {
+      cartItemsEl.innerHTML = ids.map(id => cartItemRow(id, cart[id])).join('');
+    }
+    cartSubtotalEl.textContent = `${arNum(cartTotal())} ج.م`;
+    cartCheckoutBtn.disabled = ids.length === 0;
+  }
+
+  function openCart(){
+    renderCartItems();
+    cartOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCart(){
+    cartOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (cartTrigger) cartTrigger.addEventListener('click', openCart);
+  if (cartClose) cartClose.addEventListener('click', closeCart);
+  if (cartOverlay){
+    cartOverlay.addEventListener('click', (e) => { if (e.target === cartOverlay) closeCart(); });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCart();
+  });
+
+  // إضافة منتج للسلة من كارت المنتج (تفويض أحداث لأن الكروت بتتجدد ديناميكيًا)
+  if (carousel){
+    carousel.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('.add-cart-btn[data-add-id]');
+      if (!addBtn || addBtn.disabled) return;
+      e.stopPropagation();
+      addToCart(addBtn.dataset.addId, addBtn);
+    });
+  }
+
+  // إضافة منتج للسلة من مودال التفاصيل
+  if (modalAddCartBtn){
+    modalAddCartBtn.addEventListener('click', () => {
+      if (modalAddCartBtn.disabled || !currentModalProductId) return;
+      addToCart(currentModalProductId, modalAddCartBtn);
+    });
+  }
+
+  // تعديل الكمية وإزالة عنصر داخل درج السلة
+  if (cartItemsEl){
+    cartItemsEl.addEventListener('click', (e) => {
+      const plusBtn = e.target.closest('.qty-plus');
+      const minusBtn = e.target.closest('.qty-minus');
+      const removeBtn = e.target.closest('.cart-item-remove');
+      if (plusBtn) changeQty(plusBtn.dataset.qtyId, 1);
+      else if (minusBtn) changeQty(minusBtn.dataset.qtyId, -1);
+      else if (removeBtn) removeFromCart(removeBtn.dataset.removeId);
+    });
+  }
+
+  // إتمام الطلب عبر واتساب
+  if (cartCheckoutBtn){
+    cartCheckoutBtn.addEventListener('click', () => {
+      const ids = Object.keys(cart).filter(id => productsById.has(id) && cart[id] > 0);
+      if (ids.length === 0) return;
+      let msg = 'أهلاً Rebonz Cosmetics 🩷، عايزة أطلب:\n\n';
+      ids.forEach(id => {
+        const p = productsById.get(id);
+        const qty = cart[id];
+        const priceNum = p.price ? Number(p.price) : 0;
+        msg += `• ${p.name} × ${qty} = ${arNum(priceNum * qty)} ج.م\n`;
+      });
+      msg += `\nالإجمالي: ${arNum(cartTotal())} ج.م`;
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener');
+    });
+  }
+
+  updateCartBadge();
 
   // =====================================================
   // mobile nav
